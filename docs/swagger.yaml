@@ -1,0 +1,264 @@
+basePath: /
+definitions:
+  models.Booking:
+    properties:
+      end_time:
+        type: string
+      id:
+        type: integer
+      start_time:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - end_time
+    - start_time
+    - user_id
+    type: object
+  models.User:
+    properties:
+      booking:
+        items:
+          $ref: '#/definitions/models.Booking'
+        type: array
+      created_at:
+        type: string
+      id:
+        type: integer
+      password:
+        minLength: 8
+        type: string
+      updated_at:
+        type: string
+      username:
+        maxLength: 20
+        minLength: 3
+        type: string
+    required:
+    - password
+    - username
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  description: Это API для бронирования игровых мест в компьютерном клубе.
+  title: Booking API
+  version: "1.0"
+paths:
+  /bookings:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список всех бронирований
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Booking'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Получение всех бронирований
+      tags:
+      - bookings
+    post:
+      consumes:
+      - application/json
+      description: Создает новое бронирование
+      parameters:
+      - description: Данные бронирования
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/models.Booking'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Создание бронирования
+      tags:
+      - bookings
+  /bookings/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет бронирование
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Удаление бронирования по id
+      tags:
+      - bookings
+    get:
+      consumes:
+      - application/json
+      description: Возвращает бронирование
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Получение бронирования по id
+      tags:
+      - bookings
+    put:
+      consumes:
+      - application/json
+      description: Изменяет существующие бронирование
+      parameters:
+      - description: Данные бронирования
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/models.Booking'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Booking'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Изменение бронирования
+      tags:
+      - bookings
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список всех пользователей
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Получение всех пользователей
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Создает нового пользователя
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Создание пользователя
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Удаление пользователя по полю id
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Возвращает пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Получение пользователя по id
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные пользователя
+      parameters:
+      - description: Username(optional), Password(optional)
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Обновление данных пользователя по полю id
+      tags:
+      - users
+swagger: "2.0"
