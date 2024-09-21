@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: govno
+      POSTGRES_DB: booking
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - booking_network
+    restart: always
+
+  booking-api:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: govno
+      DB_NAME: booking
+    networks:
+      - booking_network
+    volumes:
+      - ./configs:/app/configs
+
+volumes:
+  db_data:
+
+networks:
+  booking_network:
+    driver: bridge

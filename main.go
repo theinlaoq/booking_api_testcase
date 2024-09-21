@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/spf13/viper"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"github.com/theinlaoq/booking-api-testcase/db"
 	_ "github.com/theinlaoq/booking-api-testcase/docs"
@@ -18,6 +19,10 @@ import (
 // @BasePath /
 
 func main() {
+	if err := initConfig(); err != nil {
+		log.Fatalf("error initialzing config: %s", err.Error())
+	}
+
 	db.DBConnection()
 	r := mux.NewRouter()
 
@@ -36,6 +41,12 @@ func main() {
 	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
 	log.Println("server is running")
-	log.Fatal(http.ListenAndServe(":3000", r))
+	log.Fatal(http.ListenAndServe(viper.GetString("port"), r))
 
+}
+
+func initConfig() error {
+	viper.AddConfigPath("configs")
+	viper.SetConfigName("config")
+	return viper.ReadInConfig()
 }

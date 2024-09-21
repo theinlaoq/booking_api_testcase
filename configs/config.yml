@@ -1,0 +1,6 @@
+port: ":3000"
+host: "db" 
+user: "postgres" 
+password: "govno" 
+dbname: "booking" 
+dbport: "5432"

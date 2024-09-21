@@ -1,17 +1,26 @@
 package db
 
 import (
+	"fmt"
 	"log"
 
+	"github.com/spf13/viper"
 	"github.com/theinlaoq/booking-api-testcase/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-var dsn = "host=localhost user=postgres password=govno dbname=booking port=5432 sslmode=disable"
 var DB *gorm.DB
 
 func DBConnection() {
+	if err := initConfig(); err != nil {
+		log.Fatalf("error initialzing config: %s", err.Error())
+	}
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		viper.GetString("host"), viper.GetString("user"), viper.GetString("password"),
+		viper.GetString("dbname"), viper.GetString("dbport"))
+
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
@@ -21,4 +30,10 @@ func DBConnection() {
 		DB.AutoMigrate(models.User{}, models.Booking{})
 		log.Println("db connected")
 	}
+}
+
+func initConfig() error {
+	viper.AddConfigPath("configs")
+	viper.SetConfigName("config")
+	return viper.ReadInConfig()
 }
